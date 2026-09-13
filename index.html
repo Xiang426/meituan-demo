@@ -2,167 +2,104 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#FFD100">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#ffd100">
+  <meta name="description" content="合租管家 - AA账单、家务排班与公共采购管理">
   <link rel="icon" type="image/png" href="assets/hezuguanjia-logo.png">
   <link rel="apple-touch-icon" href="assets/hezuguanjia-logo.png">
+  <link rel="stylesheet" href="styles.css">
   <title>合租管家</title>
-  <style>
-    :root {
-      --yellow: #ffd100;
-      --ink: #202124;
-      --muted: #6b7280;
-      --surface: #ffffff;
-      --background: #f6f7f8;
-      --teal: #08b89d;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      font-family: Arial, "Microsoft YaHei", sans-serif;
-      background: var(--background);
-      color: var(--ink);
-    }
-
-    .topbar {
-      height: 10px;
-      background: var(--yellow);
-    }
-
-    .container {
-      width: min(900px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 84px 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 44px;
-    }
-
-    .brand-logo {
-      width: 112px;
-      height: 112px;
-      flex: 0 0 112px;
-      object-fit: contain;
-    }
-
-    .brand-name {
-      margin: 0;
-      font-size: 48px;
-      line-height: 1.1;
-      letter-spacing: 0;
-    }
-
-    .brand-slogan {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .panel {
-      padding: 30px;
-      border: 1px solid #ececec;
-      border-radius: 8px;
-      background: var(--surface);
-    }
-
-    .panel p {
-      margin: 0 0 12px;
-      color: #4b5563;
-      font-size: 18px;
-      line-height: 1.8;
-    }
-
-    .panel p:last-of-type {
-      margin-bottom: 0;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 26px;
-      padding: 10px 16px;
-      border-radius: 6px;
-      background: var(--ink);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .tag::before {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--teal);
-      content: "";
-    }
-
-    @media (max-width: 560px) {
-      .container {
-        width: min(100% - 32px, 900px);
-        padding: 52px 0;
-      }
-
-      .brand {
-        align-items: flex-start;
-        gap: 16px;
-        margin-bottom: 30px;
-      }
-
-      .brand-logo {
-        width: 76px;
-        height: 76px;
-        flex-basis: 76px;
-      }
-
-      .brand-name {
-        font-size: 34px;
-      }
-
-      .brand-slogan,
-      .panel p {
-        font-size: 16px;
-      }
-
-      .panel {
-        padding: 22px;
-      }
-    }
-  </style>
 </head>
-
 <body>
-  <div class="topbar"></div>
-  <main class="container">
-    <header class="brand">
-      <img
-        class="brand-logo"
-        src="assets/hezuguanjia-logo.png"
-        alt="合租管家 Logo"
-        width="112"
-        height="112"
-      >
-      <div>
-        <h1 class="brand-name">合租管家</h1>
-        <p class="brand-slogan">账算清，家管好，合租更轻松</p>
-      </div>
-    </header>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <section class="panel">
-      <p>合租生活管理产品正在持续开发与迭代中。</p>
-      <p>当前版本：V0.1<br>更新时间：2026年9月</p>
-      <div class="tag">Project in Progress</div>
-    </section>
-  </main>
+  <section id="login-screen" class="login-screen">
+    <div class="login-brand">
+      <img src="assets/hezuguanjia-logo.png" alt="合租管家" class="login-logo">
+      <div>
+        <p class="brand-kicker">一起住，也一起把生活理顺</p>
+        <h1>合租管家</h1>
+        <p>账算清，家管好，合租更轻松</p>
+      </div>
+    </div>
+
+    <div class="login-panel">
+      <div class="login-heading">
+        <span class="eyebrow">欢迎回来</span>
+        <h2>登录你的合租房</h2>
+      </div>
+      <form id="login-form" novalidate>
+        <label class="field-label" for="phone">手机号</label>
+        <div class="field-row">
+          <span class="field-prefix">+86</span>
+          <input id="phone" name="phone" inputmode="numeric" autocomplete="tel" maxlength="13" value="188 0000 0926" aria-describedby="phone-error">
+        </div>
+        <p id="phone-error" class="field-error"></p>
+
+        <label class="field-label" for="room-code">房间邀请码</label>
+        <input id="room-code" name="roomCode" autocomplete="one-time-code" maxlength="12" value="A-1902" aria-describedby="code-error">
+        <p id="code-error" class="field-error"></p>
+
+        <button class="primary-button login-button" type="submit">进入我的合租房 <span aria-hidden="true">→</span></button>
+        <button class="text-button demo-login" id="demo-login" type="button">使用体验账号</button>
+      </form>
+      <p class="privacy-note">演示版不会发送短信，数据仅保存在当前浏览器。</p>
+    </div>
+
+    <div class="login-benefits" aria-label="核心功能">
+      <div><b>AA</b><span>智能结算</span></div>
+      <div><b>7天</b><span>家务轮班</span></div>
+      <div><b>共享</b><span>采购清单</span></div>
+    </div>
+  </section>
+
+  <div id="app-shell" class="app-shell is-hidden">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/hezuguanjia-logo.png" alt="">
+        <div><strong>合租管家</strong><span>阳光花园 A-1902</span></div>
+      </div>
+      <nav id="desktop-nav" class="side-nav" aria-label="主导航"></nav>
+      <div class="sidebar-room">
+        <span>本月合租健康度</span>
+        <strong>92</strong>
+        <div class="progress-track"><i style="width:92%"></i></div>
+        <small>账单及时，家务完成率良好</small>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="top-header">
+        <button class="room-switch" type="button" data-action="room-info">
+          <span class="room-pin" aria-hidden="true">⌂</span>
+          <span><b>阳光花园</b><small>A-1902 · 4位室友</small></span>
+          <span aria-hidden="true">⌄</span>
+        </button>
+        <div class="header-actions">
+          <button class="icon-button" type="button" data-action="messages" aria-label="消息"><span aria-hidden="true">♢</span><i id="message-dot"></i></button>
+          <button class="avatar-button" type="button" data-tab="profile" aria-label="我的">象</button>
+        </div>
+      </header>
+
+      <main id="page-content" class="page-content"></main>
+
+      <nav id="mobile-nav" class="bottom-nav" aria-label="主导航"></nav>
+    </div>
+  </div>
+
+  <div id="modal-backdrop" class="modal-backdrop is-hidden" aria-hidden="true">
+    <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"></section>
+  </div>
+
+  <template id="modal-shell-template">
+    <header class="modal-header">
+      <div><span class="eyebrow" id="modal-kicker"></span><h2 id="modal-title"></h2></div>
+      <button class="icon-button modal-close" type="button" data-action="close-modal" aria-label="关闭">×</button>
+    </header>
+    <div id="modal-body" class="modal-body"></div>
+  </template>
+
+  <script src="app.js"></script>
 </body>
 </html>
+
